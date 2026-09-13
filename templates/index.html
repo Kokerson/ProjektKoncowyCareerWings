@@ -1,8 +1,22 @@
-<!DOCTYPE html><html lang="pl"><head><meta charset="UTF-8"><title>Konsultant Rynkowy AI</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head><body>
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Konsultant Rynkowy AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
 <main class="container">
-<nav><a href="/">Czat z Ekspertem</a> | <a href="/analiza-strona">Analizuj plik rynkowy</a> | <a href="/wyloguj">Wyloguj</a></nav>
-<h1>Konsultant Rynkowy AI</h1>
-<form action="/zapytaj" method="POST"><textarea name="pytanie" rows="4" placeholder="Zadaj pytanie finansowe..."></textarea><button type="submit">Wyślij</button></form>
-{% if odpowiedz %}<div class="answer-box"><p>{{ odpowiedz }}</p></div>{% endif %}
-</main></body></html>
+    <nav><a href="/">Czat z Ekspertem</a> | <a href="/analiza-strona">Analizuj plik rynkowy</a> | <a href="/wyloguj">Wyloguj</a>
+    </nav>
+    <h1>Konsultant Rynkowy AI</h1>
+    <form action="/zapytaj" method="POST"><textarea name="pytanie" rows="4"
+                                                    placeholder="Zadaj pytanie finansowe..."></textarea>
+        <button type="submit">Wyślij</button>
+    </form>
+    {% if odpowiedz %}
+    <div class="answer-box"><p>{{ odpowiedz }}</p></div>
+    {% endif %}
+</main>
+</body>
+</html>

@@ -1,6 +1,41 @@
-body { margin: 0; font-family: "Georgia", serif; background-color: #fafafa; line-height: 1.6; }
-.raport { max-width: 720px; margin: 40px auto; padding: 48px; background-color: #ffffff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-.raport-naglowek { border-bottom: 3px solid #0097e6; margin-bottom: 32px; }
-.badge { background-color: #0097e6; color: white; padding: 4px 12px; border-radius: 999px; }
-.wykres img { max-width: 100%; }
-@media print { body { background: white; } .raport { box-shadow: none; } }
+body {
+    margin: 0;
+    font-family: "Georgia", serif;
+    background-color: #fafafa;
+    line-height: 1.6;
+}
+
+.raport {
+    max-width: 720px;
+    margin: 40px auto;
+    padding: 48px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.raport-naglowek {
+    border-bottom: 3px solid #0097e6;
+    margin-bottom: 32px;
+}
+
+.badge {
+    background-color: #0097e6;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 999px;
+}
+
+.wykres img {
+    max-width: 100%;
+}
+
+@media print {
+    body {
+        background: white;
+    }
+
+    .raport {
+        box-shadow: none;
+    }
+}

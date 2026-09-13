@@ -1,7 +1,21 @@
-<!DOCTYPE html><html lang="pl"><head><meta charset="UTF-8"><title>Rejestracja</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head><body>
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Rejestracja</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
 <main class="container"><h1>Utwórz konto</h1>
-<form action="/rejestracja" method="POST"><input type="text" name="nazwa_uzytkownika" placeholder="Login" required><input type="password" name="haslo" placeholder="Hasło (min. 8 znaków)" required><button type="submit">Zarejestruj</button></form>
-<p style="font-size:12px; color:#666">Rejestrując się, zgadzasz się na przetwarzanie danych przez Anthropic AI (RODO)[cite: 8].</p>
-{% if blad %}<p class="answer-box">{{ blad }}</p>{% endif %}{% if sukces %}<p class="answer-box">{{ sukces }} <a href="/logowanie">Zaloguj się</a></p>{% endif %}
-</main></body></html>
+    <form action="/rejestracja" method="POST"><input type="text" name="nazwa_uzytkownika" placeholder="Login"
+                                                     required><input type="password" name="haslo"
+                                                                     placeholder="Hasło (min. 8 znaków)" required>
+        <button type="submit">Zarejestruj</button>
+    </form>
+    <p style="font-size:12px; color:#666">Rejestrując się, zgadzasz się na przetwarzanie danych przez Anthropic AI
+        (RODO).</p>
+    {% if blad %}<p class="answer-box">{{ blad }}</p>{% endif %}{% if sukces %}<p class="answer-box">{{ sukces }} <a
+            href="/logowanie">Zaloguj się</a></p>{% endif %}
+</main>
+</body>
+</html>

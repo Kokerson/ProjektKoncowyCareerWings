@@ -1,6 +1,18 @@
-<!DOCTYPE html><html lang="pl"><head><meta charset="UTF-8"><title>Zaloguj się</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head><body>
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Zaloguj się</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
 <main class="container"><h1>Zaloguj się do platformy analitycznej</h1>
-<form action="/logowanie" method="POST"><input type="text" name="nazwa_uzytkownika" placeholder="Login" required><input type="password" name="haslo" placeholder="Hasło" required><button type="submit">Zaloguj</button></form>
-{% if blad %}<p class="answer-box">{{ blad }}</p>{% endif %}<p><a href="/rejestracja">Zarejestruj się</a></p>
-</main></body></html>
+    <form action="/logowanie" method="POST"><input type="text" name="nazwa_uzytkownika" placeholder="Login"
+                                                   required><input type="password" name="haslo" placeholder="Hasło"
+                                                                   required>
+        <button type="submit">Zaloguj</button>
+    </form>
+    {% if blad %}<p class="answer-box">{{ blad }}</p>{% endif %}<p><a href="/rejestracja">Zarejestruj się</a></p>
+</main>
+</body>
+</html>
