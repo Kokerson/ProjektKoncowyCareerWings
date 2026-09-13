@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Streszcz dowolny tekst</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="container">
+        <nav>
+            <a href="/">Czat z Ekspertem</a> |
+            <a href="/analiza-strona">Analizuj plik rynkowy</a> |
+            <a href="/streszczenie-strona">Streszcz tekst</a> |
+            <a href="/wyloguj">Wyloguj</a>
+        </nav>
+
+        <h1>Streszcz dowolny tekst</h1>
+        <form action="/streszcz" method="POST">
+            <textarea name="tekst_do_streszczenia" rows="8" placeholder="Wklej długi tekst, artykuł lub notatki rynkowe..."></textarea>
+            <button type="submit">Generuj streszczenie</button>
+        </form>
+
+        {% if blad %}
+        <div class="answer-box">
+            <p><strong>Uwaga:</strong> {{ blad }}</p>
+        </div>
+        {% endif %}
+
+        {% if streszczenie_ai %}
+        <div class="answer-box">
+            <h3>Gotowe streszczenie:</h3>
+            <p>{{ streszczenie_ai }}</p>
+        </div>
+        {% endif %}
+    </main>
+</body>
+</html>
