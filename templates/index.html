@@ -2,16 +2,17 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Konsultant Rynkowy AI</title>
+    <title>Czat AI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <main class="container">
-    <nav><a href="/">Czat z Ekspertem</a> | <a href="/analiza-strona">Analizuj plik rynkowy</a> | <a href="/wyloguj">Wyloguj</a>
+    <nav class="main-nav"><a href="/czat" class="nav-link">Czat</a> <a href="/analiza-strona" class="nav-link">Analiza
+        CSV</a> <a href="/streszczenie-strona" class="nav-link">Streszczanie</a> <a href="/wyloguj"
+                                                                                    class="nav-link logout-link">Wyloguj</a>
     </nav>
-    <h1>Konsultant Rynkowy AI</h1>
-    <form action="/zapytaj" method="POST"><textarea name="pytanie" rows="4"
-                                                    placeholder="Zadaj pytanie finansowe..."></textarea>
+    <h1>Czat z Ekspertem</h1>
+    <form action="/zapytaj" method="POST"><textarea name="pytanie" rows="4"></textarea>
         <button type="submit">Wyślij</button>
     </form>
     {% if odpowiedz %}

@@ -2,24 +2,25 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Analiza Rynku AI</title>
+    <title>Analiza AI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <main class="container">
-    <nav><a href="/">Czat z Ekspertem</a> | <a href="/analiza-strona">Analizuj plik rynkowy</a> | <a href="/wyloguj">Wyloguj</a>
+    <nav class="main-nav"><a href="/czat" class="nav-link">Czat</a> <a href="/analiza-strona" class="nav-link">Analiza
+        CSV</a> <a href="/streszczenie-strona" class="nav-link">Streszczanie</a> <a href="/wyloguj"
+                                                                                    class="nav-link logout-link">Wyloguj</a>
     </nav>
-    <h1>Wgraj plik z danymi rynkowymi (CSV)</h1>
+    <h1>Wgraj dane (CSV)</h1>
     <form action="/analizuj" method="POST" enctype="multipart/form-data"><input type="file" name="plik_csv"
                                                                                 accept=".csv">
         <button type="submit">Analizuj</button>
     </form>
     {% if blad %}
-    <div class="answer-box"><p><strong>Błąd:</strong> {{ blad }}</p></div>
+    <div class="answer-box"><p>{{ blad }}</p></div>
     {% endif %}
     {% if podsumowanie_ai %}
-    <div class="answer-box">
-        <p><a href="{{ link_do_raportu }}" target="_blank">Otwórz pełny raport jako stronę HTML</a></p>
+    <div class="answer-box"><p><a href="{{ link_do_raportu }}" target="_blank">Otwórz pełny raport</a></p>
         <div id="podsumowanie"></div>
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
         <script>document.getElementById("podsumowanie").innerHTML = marked.parse(`{{ podsumowanie_ai | safe }}`);

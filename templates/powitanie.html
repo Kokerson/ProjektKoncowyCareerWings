@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Market Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="welcome-bg">
+    <main class="welcome-container">
+        <div class="hero-section">
+            <h1 class="hero-title">AI Market Analyzer</h1>
+            <p class="hero-subtitle">Zautomatyzowana analiza rynku wspierana przez sztuczną inteligencję. Wdrażaj, analizuj i skaluj swoje inwestycje.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>💬 Czat Rynkowy</h3>
+                <p>Konsultuj strategie i trendy z dedykowanym modelem Claude AI.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📊 Analiza CSV</h3>
+                <p>Wgrywaj surowe dane, a AI wygeneruje dla Ciebie wizualne raporty.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📝 Streszczenia</h3>
+                <p>Błyskawicznie skracaj długie raporty finansowe i artykuły.</p>
+            </div>
+        </div>
+
+        <div class="auth-buttons">
+            <a href="/logowanie" class="btn btn-primary">Zaloguj się</a>
+            <a href="/rejestracja" class="btn btn-secondary">Załóż darmowe konto</a>
+        </div>
+    </main>
+</body>
+</html>

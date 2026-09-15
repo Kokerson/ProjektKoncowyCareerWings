@@ -2,36 +2,24 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Streszcz dowolny tekst</title>
+    <title>Streszczanie AI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <main class="container">
-    <nav>
-        <a href="/">Czat z Ekspertem</a> |
-        <a href="/analiza-strona">Analizuj plik rynkowy</a> |
-        <a href="/streszczenie-strona">Streszcz tekst</a> |
-        <a href="/wyloguj">Wyloguj</a>
+    <nav class="main-nav"><a href="/czat" class="nav-link">Czat</a> <a href="/analiza-strona" class="nav-link">Analiza
+        CSV</a> <a href="/streszczenie-strona" class="nav-link">Streszczanie</a> <a href="/wyloguj"
+                                                                                    class="nav-link logout-link">Wyloguj</a>
     </nav>
-
-    <h1>Streszcz dowolny tekst</h1>
-    <form action="/streszcz" method="POST">
-        <textarea name="tekst_do_streszczenia" rows="8"
-                  placeholder="Wklej długi tekst, artykuł lub notatki rynkowe..."></textarea>
-        <button type="submit">Generuj streszczenie</button>
+    <h1>Streszcz tekst</h1>
+    <form action="/streszcz" method="POST"><textarea name="tekst_do_streszczenia" rows="6"></textarea>
+        <button type="submit">Streszcz</button>
     </form>
-
     {% if blad %}
-    <div class="answer-box">
-        <p><strong>Uwaga:</strong> {{ blad }}</p>
-    </div>
+    <div class="answer-box"><p>{{ blad }}</p></div>
     {% endif %}
-
     {% if streszczenie_ai %}
-    <div class="answer-box">
-        <h3>Gotowe streszczenie:</h3>
-        <p>{{ streszczenie_ai }}</p>
-    </div>
+    <div class="answer-box"><p>{{ streszczenie_ai }}</p></div>
     {% endif %}
 </main>
 </body>

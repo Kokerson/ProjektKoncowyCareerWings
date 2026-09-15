@@ -27,6 +27,7 @@ MAX_TOKENS = 1000
 DANE_PREVIEW_WIERSZY = 50
 MAX_DLUGOSC_PYTANIA = 1000
 MAX_WIERSZY_CSV = 100_000
+MAX_DLUGOSC_STRESZCZENIA = 5000  # <--- TUTAJ DODANA BRAKUJĄCA ZMIENNA
 PLIK_UZYTKOWNIKOW = "users.json"
 
 # --- ZABEZPIECZENIA ---
@@ -158,8 +159,18 @@ def zapisz_raport_html(tresc_markdown, nazwa_pliku, nazwa_zrodlowa, wykres_base6
     return f"/static/raporty/{nazwa_pliku}"
 
 
-# --- WIDOKI ---
+# --- WIDOKI I ROUTING ---
+
 @app.route("/")
+def powitanie():
+    # Jeśli użytkownik jest już zalogowany, pomijamy ekran powitalny i rzucamy go do czatu
+    if "nazwa_uzytkownika" in session:
+        return redirect(url_for("strona_glowna"))
+    return render_template("powitanie.html")
+
+
+@app.route("/czat")
+@wymaga_logowania
 def strona_glowna():
     return render_template("index.html")
 
@@ -169,15 +180,20 @@ def strona_glowna():
 @wymaga_logowania
 def zapytaj():
     pytanie = oczysc_tekst(request.form.get("pytanie", "").strip())
-    if not pytanie: return render_template("index.html", odpowiedz="Wpisz zapytanie rynkowe!")
-    if len(pytanie) > MAX_DLUGOSC_PYTANIA: return render_template("index.html", odpowiedz="Za długie.")
-    if wyglada_na_probe_injection(pytanie): return render_template("index.html", odpowiedz="Podejrzana treść.")
+    if not pytanie:
+        return render_template("index.html", odpowiedz="Wpisz zapytanie rynkowe!")
+    if len(pytanie) > MAX_DLUGOSC_PYTANIA:
+        return render_template("index.html", odpowiedz="Za długie.")
+    if wyglada_na_probe_injection(pytanie):
+        return render_template("index.html", odpowiedz="Podejrzana treść.")
+
     tresc_do_wyslania = f"<pytanie_uzytkownika>\n{pytanie}\n</pytanie_uzytkownika>"
     odp = waliduj_output(zapytaj_claude(tresc_do_wyslania, SYSTEM_PROMPT_CZAT))
     return render_template("index.html", odpowiedz=odp)
 
 
 @app.route("/analiza-strona")
+@wymaga_logowania
 def analiza_strona():
     return render_template("analiza.html")
 
@@ -187,19 +203,51 @@ def analiza_strona():
 @wymaga_logowania
 def analizuj():
     plik = request.files.get("plik_csv")
-    if not plik or not plik.filename.endswith(".csv"): return render_template("analiza.html", blad="Prześlij .csv.")
+
+    # NAPRAWA: Dodano .lower() przy sprawdzaniu rozszerzenia!
+    if not plik or not plik.filename.lower().endswith(".csv"):
+        return render_template("analiza.html", blad="Prześlij prawidłowy plik .csv.")
+
     try:
         df = pd.read_csv(plik)
     except Exception as e:
         return render_template("analiza.html", blad=f"Błąd: {e}")
-    if len(df) > MAX_WIERSZY_CSV or df.shape[0] == 0: return render_template("analiza.html",
-                                                                             blad="Plik za duży lub pusty.")
+
+    if len(df) > MAX_WIERSZY_CSV or df.shape[0] == 0:
+        return render_template("analiza.html", blad="Plik za duży lub pusty.")
 
     prompt = zbuduj_prompt_analizy(df)
     podsumowanie = zapytaj_claude(prompt)
     nazwa_raportu = f"raport_{os.path.splitext(secure_filename(plik.filename))[0]}.html"
     link = zapisz_raport_html(podsumowanie, nazwa_raportu, plik.filename, stworz_wykres(df))
+
     return render_template("analiza.html", podsumowanie_ai=podsumowanie, link_do_raportu=link, plik=plik.filename)
+
+
+@app.route("/streszczenie-strona")
+@wymaga_logowania
+def streszczenie_strona():
+    return render_template("streszczenie.html")
+
+
+@app.route("/streszcz", methods=["POST"])
+@limiter.limit("3 per minute")
+@wymaga_logowania
+def streszcz():
+    tekst = request.form.get("tekst_do_streszczenia", "").strip()
+    tekst = oczysc_tekst(tekst)
+
+    if not tekst:
+        return render_template("streszczenie.html", blad="Pole nie może być puste.")
+    if len(tekst) > MAX_DLUGOSC_STRESZCZENIA:
+        return render_template("streszczenie.html", blad=f"Tekst przekracza limit {MAX_DLUGOSC_STRESZCZENIA} znaków.")
+    if wyglada_na_probe_injection(tekst):
+        return render_template("streszczenie.html", blad="Podejrzana treść - zablokowano.")
+
+    prompt = f"Proszę, przygotuj zwięzłe streszczenie poniższego tekstu.\n<dane_uzytkownika>\n{tekst}\n</dane_uzytkownika>"
+    wynik_streszczenia = waliduj_output(zapytaj_claude(prompt, system_prompt=SYSTEM_PROMPT_CZAT))
+
+    return render_template("streszczenie.html", oryginalny_tekst=tekst, streszczenie_ai=wynik_streszczenia)
 
 
 @app.route("/rejestracja", methods=["GET", "POST"])
@@ -211,7 +259,7 @@ def rejestracja():
     if nazwa in uz: return render_template("rejestracja.html", blad="Nazwa zajęta.")
     uz[nazwa] = {"haslo_hash": bcrypt.generate_password_hash(haslo).decode("utf-8")}
     zapisz_uzytkownikow(uz)
-    return render_template("rejestracja.html", sukces="Zarejestrowano!")
+    return render_template("rejestracja.html", sukces="Zarejestrowano pomyślnie!")
 
 
 @app.route("/logowanie", methods=["GET", "POST"])
@@ -220,8 +268,8 @@ def logowanie():
     if request.method == "GET": return render_template("logowanie.html")
     nazwa, haslo = request.form.get("nazwa_uzytkownika", "").strip(), request.form.get("haslo", "")
     uz = wczytaj_uzytkownikow().get(nazwa)
-    if not uz or not bcrypt.check_password_hash(uz["haslo_hash"], haslo): return render_template("logowanie.html",
-                                                                                                 blad="Błędne dane.")
+    if not uz or not bcrypt.check_password_hash(uz["haslo_hash"], haslo):
+        return render_template("logowanie.html", blad="Błędne dane.")
     session["nazwa_uzytkownika"] = nazwa
     return redirect(url_for("strona_glowna"))
 
@@ -229,7 +277,7 @@ def logowanie():
 @app.route("/wyloguj")
 def wyloguj():
     session.pop("nazwa_uzytkownika", None)
-    return redirect(url_for("logowanie"))
+    return redirect(url_for("powitanie"))
 
 
 @app.route("/health")
