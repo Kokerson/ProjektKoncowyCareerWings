@@ -27,7 +27,7 @@ MAX_TOKENS = 1000
 DANE_PREVIEW_WIERSZY = 50
 MAX_DLUGOSC_PYTANIA = 1000
 MAX_WIERSZY_CSV = 100_000
-MAX_DLUGOSC_STRESZCZENIA = 5000  # <--- TUTAJ DODANA BRAKUJĄCA ZMIENNA
+MAX_DLUGOSC_STRESZCZENIA = 5000
 PLIK_UZYTKOWNIKOW = "users.json"
 
 # --- ZABEZPIECZENIA ---
@@ -204,7 +204,6 @@ def analiza_strona():
 def analizuj():
     plik = request.files.get("plik_csv")
 
-    # NAPRAWA: Dodano .lower() przy sprawdzaniu rozszerzenia!
     if not plik or not plik.filename.lower().endswith(".csv"):
         return render_template("analiza.html", blad="Prześlij prawidłowy plik .csv.")
 
